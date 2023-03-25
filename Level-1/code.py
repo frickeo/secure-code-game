@@ -16,12 +16,16 @@ from collections import namedtuple
 Order = namedtuple('Order', 'id, items')
 Item = namedtuple('Item', 'type, description, amount, quantity')
 
+ITEM_AMOUNT_LIMIT = 1e10
+
 def validorder(order: Order):
     net = 0
     
     for item in order.items:
         if item.type == 'payment':
-            net += item.amount
+            # ignore payments that are outside the limit
+            if abs(item.amount)  <= ITEM_AMOUNT_LIMIT:
+                net += item.amount
         elif item.type == 'product':
             net -= item.amount * item.quantity
         else:
