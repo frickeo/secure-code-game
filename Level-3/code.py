@@ -44,13 +44,13 @@ class TaxPayer:
             raise Exception("Error: Tax form is required for all users")
        
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        form_path = os.path.normpath(path)
+        form_path = os.path.abspath(os.path.normpath(path))
         # defends against path traversal attacks
         if base_dir != os.path.commonpath([base_dir, form_path]):
             return base_dir
 
-        with open(path, 'rb') as form:
+        with open(form_path, 'rb') as form:
             tax_data = bytearray(form.read())
 
         # assume that taxa data is returned on screen after this
-        return path
+        return form_path
